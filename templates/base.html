@@ -10,7 +10,9 @@
     <header>
         <div class="header-container">
             <div class="image-text">
-                <span><img src="/static/img/doge-logo.png" alt="Dogegram Logo" width="250" height="60"></span>
+                <a href="{% url 'main_page:main-page' %}">
+                    <span><img src="/static/img/doge-logo.png" alt="Dogegram Logo" width="250" height="60"></span>
+                </a>
             </div>
             <div class="search">
                 <input type="text" class="search__input" placeholder="Type your text">

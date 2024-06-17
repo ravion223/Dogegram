@@ -8,7 +8,7 @@ class CustomUser(AbstractUser):
         ('user', 'User'),
         ('admin', 'Administrator')
     ]
-    username = models.CharField(max_length=93)
+    username = models.CharField(max_length=93, unique=True)
     access = models.CharField(max_length=31, choices=ACCESS_CHOICES, default='user')
 
     def __str__(self) -> str:

@@ -93,6 +93,7 @@ footer {
     align-items: center;
     justify-content: space-between;
     text-align: center;
+    margin-right: 120px;
   }
   
   .search__input {
@@ -105,7 +106,7 @@ footer {
     border-radius: 30px;
     width: 12em;
     transition: all ease-in-out .5s;
-    margin-right: -2rem;
+    margin-right: -2em;
   }
   
   .search__input:hover, .search__input:focus {
@@ -141,3 +142,101 @@ footer {
     width: 1.2em;
     fill: #b4b4b4;
   }
+
+  .center-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+
+  .profile-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+}
+
+.profile-pic-mini {
+  margin-top: 5px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 5px;
+  margin-right: 40px;
+  border: 2px solid #ccc;
+}
+
+.username {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.name {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.bio {
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.followers {
+    font-size: 18px;
+    color: #333;
+}
+
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 60px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 14px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}

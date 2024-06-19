@@ -3,6 +3,8 @@ from django.urls import reverse, reverse_lazy
 from .forms import SignUpForm, SignInForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.views.generic import DetailView
+from . import models
 
 # Create your views here.
 
@@ -47,3 +49,9 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('auth_system:sign-in')
+
+
+class ProfileDetailView(DetailView):
+    model = models.CustomUserProfile
+    template_name = 'auth_system/profile-detail.html'
+    context_object_name = 'profile'

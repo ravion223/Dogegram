@@ -3,36 +3,36 @@
 {% block content %}
 <div class="center-wrapper">
     <div class="profile-container">
-        {% if profile.profile_pic %}
-            <img src="{{ profile.profile_pic.url }}" class="profile-pic" width="60" height="60">
+        {% if my_profile.profile_pic %}
+            <img src="{{ my_profile.profile_pic.url }}" class="profile-pic" width="60" height="60">
         {% else %}
             <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic" width="60" height="60">
         {% endif %}
 
-        <div class="username">{{ profile.user.username }}</div>
+        <div class="username">{{ my_profile.user.username }}</div>
 
-        {% if profile.first_name or profile.last_name %}
+        {% if my_profile.first_name or my_profile.last_name %}
             <div class="name">
-                {% if profile.first_name %}
-                    {{ profile.first_name }}
+                {% if my_profile.first_name %}
+                    {{ my_profile.first_name }}
                 {% endif %}
-                {% if profile.last_name %}
-                    {{ profile.last_name }}
+                {% if my_profile.last_name %}
+                    {{ my_profile.last_name }}
                 {% endif %}
             </div>
         {% endif %}
 
         <div class="bio">
-            {% if profile.bio %}
-                {{ profile.bio }}
+            {% if my_profile.bio %}
+                {{ my_profile.bio }}
             {% else %}
                 No bio
             {% endif %}
         </div>
 
         <div class="followers">
-            {% if profile.followers %}
-                {{ profile.total_followers }} Followers
+            {% if my_profile.followers %}
+                {{ my_profile.total_followers }} Followers
             {% else %}
                 0 Followers
             {% endif %}

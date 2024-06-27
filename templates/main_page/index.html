@@ -4,7 +4,13 @@
 <div class="content-container">
     <section class="news-feed">
         <h2>News Feed</h2>
-        <p>Latest posts from your friends and groups will appear here.</p>
+        {% if posts %}
+            {% for post in posts %}
+                {{ post.title }}
+            {% endfor %}
+        {% else %}
+            <p>Latest posts from your friends and groups will appear here.</p>
+        {% endif %}
     </section>
     <aside class="widgets">
         <div class="widget popular-groups">

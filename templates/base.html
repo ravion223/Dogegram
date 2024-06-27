@@ -35,8 +35,9 @@
                     <div class="dropdown">
                         <img src="{{ profile.profile_pic.url }}" class="profile-pic-mini" width="30" height="30">
                         <div class="dropdown-content">
-                            <a href="{% url 'auth_system:my-profile-detail' %}">My profile</a>
+                            <a href="{% url 'auth_system:profile-detail' profile.id %}">My profile</a>
                             <a href="{% url 'auth_system:my-profile-update' %}">Edit profile</a>
+                            <a href="{% url 'auth_system:notifications' %}">Notifications</a>
                             <a href="{% url 'auth_system:log-out' %}">Log-out</a>
                         </div>
                     </div>
@@ -44,8 +45,9 @@
                     <div class="dropdown">
                         <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic-mini">
                         <div class="dropdown-content">
-                            <a href="{% url 'auth_system:my-profile-detail' %}">My profile</a>
+                            <a href="{% url 'auth_system:profile-detail' profile.id %}">My profile</a>
                             <a href="{% url 'auth_system:my-profile-update' %}">Edit profile</a>
+                            <a href="{% url 'auth_system:notifications' %}">Notifications</a>
                             <a href="{% url 'auth_system:log-out' %}">Log-out</a>
                         </div>
                     </div>

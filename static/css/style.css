@@ -210,7 +210,7 @@ footer {
   display: inline-block;
 }
 
-/* Dropdown Content (Hidden by Default) */
+
 .dropdown-content {
   display: none;
   position: absolute;
@@ -220,7 +220,6 @@ footer {
   z-index: 1;
 }
 
-/* Links inside the dropdown */
 .dropdown-content a {
   color: black;
   padding: 12px 14px;
@@ -228,15 +227,21 @@ footer {
   display: block;
 }
 
-/* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #f1f1f1}
 
-/* Show the dropdown menu on hover */
+
 .dropdown:hover .dropdown-content {
   display: block;
 }
 
-/* Change the background color of the dropdown button when the dropdown content is shown */
+
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
+}
+
+.send_friend_request_btn {
+  background-color: #3e8e41;
+  padding: 10px;
+  color: #f4f2f2;
+  border: #3e8e41;
 }

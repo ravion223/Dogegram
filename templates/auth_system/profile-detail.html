@@ -2,102 +2,139 @@
 {% load static %}
 {% block content %}
 
-{% if is_self %}
-    <div class="center-wrapper">
-        <div class="profile-container">
-            {% if profile.profile_pic %}
-                <img src="{{ my_profile.profile_pic.url }}" class="profile-pic" width="60" height="60">
-            {% else %}
-                <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic" width="60" height="60">
-            {% endif %}
-
-            <div class="username">{{ profile.user.username }}</div>
-
-            {% if profile.first_name or profile.last_name %}
-                <div class="name">
-                    {% if profile.first_name %}
-                        {{ profile.first_name }}
+<div class="content-wrapper">
+    {% if is_self %}
+        <div class="profile-friends-wrapper">
+            <div class="center-wrapper">
+                <div class="profile-container">
+                    {% if profile.profile_pic %}
+                        <img src="{{ profile.profile_pic.url }}" class="profile-pic" width="60" height="60">
+                    {% else %}
+                        <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic" width="60" height="60">
                     {% endif %}
-                    {% if profile.last_name %}
-                        {{ profile.last_name }}
+
+                    <div class="username">{{ profile.user.username }}</div>
+
+                    {% if profile.first_name or profile.last_name %}
+                        <div class="name">
+                            {% if profile.first_name %}
+                                {{ profile.first_name }}
+                            {% endif %}
+                            {% if profile.last_name %}
+                                {{ profile.last_name }}
+                            {% endif %}
+                        </div>
                     {% endif %}
+
+                    <div class="bio">
+                        {% if profile.bio %}
+                            {{ profile.bio }}
+                        {% else %}
+                            No bio
+                        {% endif %}
+                    </div>
+
+                    <div class="followers">
+                        {% if profile.followers %}
+                            {{ profile.total_followers }} Followers
+                        {% else %}
+                            0 Followers
+                        {% endif %}
+                    </div>
                 </div>
-            {% endif %}
-
-            <div class="bio">
-                {% if profile.bio %}
-                    {{ profile.bio }}
-                {% else %}
-                    No bio
-                {% endif %}
             </div>
 
-            <div class="followers">
-                {% if profile.followers %}
-                    {{ profile.total_followers }} Followers
-                {% else %}
-                    0 Followers
-                {% endif %}
+            <div class="right-wrapper">
+                <div class="friends-container">
+                    Friends({{ friends|length }}): <br>
+                    <button class="send_friend_request_btn">Send friend request</button>
+                </div>
             </div>
-
-            Friends({{ friends|length }}): <br>
-            
         </div>
-    </div>
 
-{% else %}
+        <div class="posts-wrapper">
+            <div class="posts-container">
+                {% if posts %}
+                    {% for post in posts %}
+                        <img src="{{ post.post_image.url }}">
+                    {% endfor %}
+                {% else %}
+                    No posts yet.
+                {% endif %}
+            </div>
+        </div>
 
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
+    {% else %}
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <div class="profile-friends-wrapper">
+            <div class="center-wrapper">
+                <div class="profile-container">
+                    {% if profile.profile_pic %}
+                        <img src="{{ profile.profile_pic.url }}" class="profile-pic" width="60" height="60">
+                    {% else %}
+                        <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic" width="60" height="60">
+                    {% endif %}
+
+                    <div class="username">{{ profile.user.username }}</div>
+
+                    {% if profile.first_name or profile.last_name %}
+                        <div class="name">
+                            {% if profile.first_name %}
+                                {{ profile.first_name }}
+                            {% endif %}
+                            {% if profile.last_name %}
+                                {{ profile.last_name }}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="bio">
+                        {% if profile.bio %}
+                            {{ profile.bio }}
+                        {% else %}
+                            No bio
+                        {% endif %}
+                    </div>
+
+                    <div class="followers">
+                        {% if profile.followers %}
+                            {{ profile.total_followers }} Followers
+                        {% else %}
+                            0 Followers
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-wrapper">
+                <div class="friends-container">
+                    Friends({{ friends|length }}): <br>
+                    <button class="send_friend_request_btn">Send friend request</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="posts-wrapper">
+            <div class="posts-container">
+                {% if posts %}
+                    {% for post in posts %}
+                        {{ post.title }}
+                    {% endfor %}
+                {% else %}
+                    No posts yet.
+                {% endif %}
+            </div>
+        </div>
+
     {% endif %}
-
-    <div class="center-wrapper">
-        <div class="profile-container">
-            {% if profile.profile_pic %}
-                <img src="{{ profile.profile_pic.url }}" class="profile-pic" width="60" height="60">
-            {% else %}
-                <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic" width="60" height="60">
-            {% endif %}
-
-            <div class="username">{{ profile.user.username }}</div>
-
-            {% if profile.first_name or profile.last_name %}
-                <div class="name">
-                    {% if profile.first_name %}
-                        {{ profile.first_name }}
-                    {% endif %}
-                    {% if profile.last_name %}
-                        {{ profile.last_name }}
-                    {% endif %}
-                </div>
-            {% endif %}
-
-            <div class="bio">
-                {% if profile.bio %}
-                    {{ profile.bio }}
-                {% else %}
-                    No bio
-                {% endif %}
-            </div>
-
-            <div class="followers">
-                {% if profile.followers %}
-                    {{ profile.total_followers }} Followers
-                {% else %}
-                    0 Followers
-                {% endif %}
-            </div>
-
-            Friends({{ friends|length }}): <br>
-
-        
-            
-        </div>
-    </div>
-{% endif %}
+</div>
 
 {% endblock content %}

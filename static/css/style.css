@@ -48,6 +48,20 @@ header h1 {
     background-color: #0056b3;
 }
 
+.btn-red {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+    background-color: #ff0000;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-red:hover {
+    background-color: #ff000091;
+}
+
 .content-container {
     display: flex;
     padding: 20px;
@@ -83,9 +97,7 @@ footer {
     padding: 10px;
     background-color: #b4b4b4;
     border-top: 2px solid #b4b4b4;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+    margin-top: 20px;
 }
 
 .search {
@@ -143,20 +155,69 @@ footer {
     fill: #b4b4b4;
   }
 
-  .center-wrapper {
+  .content-wrapper {
     display: flex;
-    justify-content: center;
-    margin-top: 50px;
-  }
+    flex-direction: column;
+    align-items: center;
+}
 
-  .profile-container {
+.profile-friends-wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+
+
+.profile-container, .friends-container {
     width: 100%;
     max-width: 400px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.posts-container{
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.posts-container img {
+    width: calc(50% - 10px);
+    height: auto;
+    border-radius: 10px;
+}
+
+.posts-wrapper {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.center-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    flex: 0.3;
 }
 
 .profile-pic {
@@ -169,14 +230,14 @@ footer {
 }
 
 .profile-pic-mini {
-  margin-top: 5px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 5px;
-  margin-right: 40px;
-  border: 2px solid #ccc;
+    margin-top: 5px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 5px;
+    margin-right: 40px;
+    border: 2px solid #ccc;
 }
 
 .username {
@@ -203,45 +264,192 @@ footer {
     color: #333;
 }
 
-
-
 .dropdown {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
-
 .dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 60px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 60px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
 }
 
 .dropdown-content a {
-  color: black;
-  padding: 12px 14px;
-  text-decoration: none;
-  display: block;
+    color: black;
+    padding: 12px 14px;
+    text-decoration: none;
+    display: block;
 }
 
-.dropdown-content a:hover {background-color: #f1f1f1}
-
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
 
 .dropdown:hover .dropdown-content {
-  display: block;
+    display: block;
 }
 
-
 .dropdown:hover .dropbtn {
-  background-color: #3e8e41;
+    background-color: #3e8e41;
 }
 
 .send_friend_request_btn {
-  background-color: #3e8e41;
-  padding: 10px;
-  color: #f4f2f2;
-  border: #3e8e41;
+    align-items: center;
+    appearance: button;
+    background-color: #0276FF;
+    border-radius: 8px;
+    border-style: none;
+    box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    font-family: "RM Neue",sans-serif;
+    font-size: 100%;
+    line-height: 1.15;
+    padding: 10px 21px;
+    text-align: center;
+    text-transform: none;
+    transition: color .13s ease-in-out,background .13s ease-in-out,opacity .13s ease-in-out,box-shadow .13s ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.send_friend_request_btn:active {
+    background-color: #006AE8;
+}
+
+.send_friend_request_btn:hover {
+    background-color: #1C84FF;
+}
+
+.right-wrapper {
+    margin-top: 50px;
+}
+
+/* News feed posts style */
+
+.content-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.news-feed {
+    width: 600px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.news-feed h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.post {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.post-header img {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-header .username {
+    font-weight: bold;
+    color: #333;
+}
+
+.post img.post-image {
+    width: 90%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.post .description {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.post .creation-date {
+    color: #999;
+    font-size: 12px;
+    text-align: right;
+}
+
+.post .likes {
+    color: #999;
+    font-size: 12px;
+    text-align: right;
+}
+
+.widgets {
+    width: 250px;
+    margin-left: 20px;
+}
+
+.widget {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.widget h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.widget p {
+    color: #555;
+}
+
+.content-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 20px;
+}
+
+.post-detail-wrapper{
+    max-width: 60%;
+    width: 100%;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.post img.post-image-detail {
+    width: 60%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
 }

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 
 <div class="content-container">
@@ -6,7 +7,25 @@
         <h2>News Feed</h2>
         {% if posts %}
             {% for post in posts %}
-                {{ post.title }}
+                <div class="post">
+                    <div class="post-header">
+                        {% if post.author.profiles.first.profile_pic %}
+                            <img src="{{ post.author.profiles.first.profile_pic.url }}" width="50" height="50">
+                        {% else %}
+                            <img src="{% static 'img/default-profile-pic.jpg' %}" width="50" height="50">
+                        {% endif %}
+                        <div class="username">{{ post.author.username }}</div>
+                    </div>
+                    <div class="post-title">{{ post.title }}</div>
+                    <a href="{% url 'posts:detail-post' post.pk %}">
+                        {% if post.post_image %}
+                            <img src="{{ post.post_image.url }}" class="post-image">
+                        {% endif %}
+                        <div class="description">{{ post.description }}</div>
+                        <div class="creation-date">{{ post.creation_date }}</div>
+                        <div class="likes">{{ post.total_likes }} Likes</div>
+                    </a>
+                </div>
             {% endfor %}
         {% else %}
             <p>Latest posts from your friends and groups will appear here.</p>
@@ -23,6 +42,5 @@
         </div>
     </aside>
 </div>
-</main>
 
 {% endblock content %}

@@ -106,6 +106,7 @@ def profile_view(request, *args, **kwargs):
     context['is_friend'] = is_friend
     context['request_sent'] = request_sent
     context['friend_requests'] = friend_requests if is_self else None
+    context['posts'] = user.posts.all()
 
     return render(
         request,

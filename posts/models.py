@@ -16,6 +16,9 @@ class Post(models.Model):
     def __str__(self) -> str:
         return f"Post by {self.author.username}"
     
+    def total_likes(self):
+        return self.likes.count()
+    
     class Meta:
         ordering = ['creation_date']
         verbose_name = 'Post'
@@ -32,6 +35,9 @@ class Commentary(models.Model):
 
     def __str__(self) -> str:
         return f"Commentary to {self.post.title} by {self.author.username}"
+    
+    def total_likes(self):
+        return self.likes.count()
     
     class Meta:
         ordering = ['creation_date']

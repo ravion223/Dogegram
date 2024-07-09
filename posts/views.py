@@ -1,5 +1,5 @@
 from django.forms import BaseModelForm
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
@@ -23,7 +23,7 @@ class PostCreateView(CreateView):
     success_url = reverse_lazy('main_page:main-page')
 
     def form_valid(self, form) -> HttpResponse:
-        form.instance.author.id = self.request.user.id
+        form.instance.author = self.request.user
         return super().form_valid(form)
     
 
@@ -86,5 +86,37 @@ def like_post(request, pk):
     else:
         post.likes.add(request.user)
         liked = True
+        auth_models.Notification.objects.create(user=post.author, message=f"{request.user.username} liked your post!")
 
     return HttpResponseRedirect(reverse('posts:detail-post', args=[str(pk)]))
+
+
+def like_post_main(request, pk):
+    post = get_object_or_404(models.Post, id=request.POST.get('post_id'))
+    liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        liked = False
+    else:
+        post.likes.add(request.user)
+        liked = True
+
+
+def update_text(request, comment_id):
+    if request.method == 'POST':
+        new_text = request.POST.get('new_text')
+        commentary = get_object_or_404(models.Commentary, id=comment_id)
+        commentary.content = new_text
+        commentary.save()
+        return JsonResponse({'message': 'Text updated successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+    
+
+def delete_commentary(request, comment_id):
+    if request.method == 'POST':
+        commentary = get_object_or_404(models.Commentary, id=comment_id)
+        commentary.delete()
+        return JsonResponse({'message': 'Commentary deleted successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})

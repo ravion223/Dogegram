@@ -12,5 +12,5 @@ urlpatterns = [
     path('my-profile/update/', views.update_profile_view, name='my-profile-update'),
     # path('send_friend_request/<int:to_user_id>', views.send_friend_request, name='send_friend_request'),
     path('notifications/', views.NotificationListView.as_view(), name='notifications'),
-
+    path('follow/<int:profile_id>/', views.follow_unfollow_view, name='follow')
 ]

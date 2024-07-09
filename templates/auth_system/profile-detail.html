@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="content-wrapper">
-    {% if is_self %}
+    {% if request.user == profile_user %}
         <div class="profile-friends-wrapper">
             <div class="center-wrapper">
                 <div class="profile-container">
@@ -13,7 +13,7 @@
                         <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic" width="60" height="60">
                     {% endif %}
 
-                    <div class="username">{{ profile.user.username }}</div>
+                    <div class="profile-username">{{ profile.user.username }}</div>
 
                     {% if profile.first_name or profile.last_name %}
                         <div class="name">
@@ -46,8 +46,22 @@
 
             <div class="right-wrapper">
                 <div class="friends-container">
-                    Friends({{ friends|length }}): <br>
-                    <button class="send_friend_request_btn">Send friend request</button>
+                    {% if friends %}
+                        <h3>Friends ({{ friends|length }}):</h3>
+                        <ul class="friends-list">
+                            {% for friend in friends %}
+                                <li class="friend-item">
+                                    {% if friend.profiles.profile_pic %}
+                                        <a href="{% url 'auth_system:profile-detail' friend.profiles.first.id %}"><img src="{{ friend.profiles.profile_pic.url }}" class="friend-profile-pic" width="40" height="40"></a><span class="friend-username">{{ friend.username }}</span>
+                                    {% else %}
+                                        <a href="{% url 'auth_system:profile-detail' friend.profiles.first.id %}"><img src="{% static 'img/default-profile-pic.jpg' %}" class="friend-profile-pic" width="40" height="40"></a><span class="friend-username">{{ friend.username }}</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Friends (0): User has no friends yet.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -56,14 +70,15 @@
             <div class="posts-container">
                 {% if posts %}
                     {% for post in posts %}
-                        <img src="{{ post.post_image.url }}">
+                        <a href="{% url 'posts:detail-post' post.id %}">
+                            <img src="{{ post.post_image.url }}">
+                        </a>
                     {% endfor %}
                 {% else %}
-                    No posts yet.
+                    <p>No posts yet.</p>
                 {% endif %}
             </div>
         </div>
-
     {% else %}
 
         {% if messages %}
@@ -83,7 +98,7 @@
                         <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic" width="60" height="60">
                     {% endif %}
 
-                    <div class="username">{{ profile.user.username }}</div>
+                    <div class="profile-username">{{ profile.user.username }}</div>
 
                     {% if profile.first_name or profile.last_name %}
                         <div class="name">
@@ -110,14 +125,70 @@
                         {% else %}
                             0 Followers
                         {% endif %}
+                        <form action="{% url 'auth_system:follow' profile.id %}" method="post">
+                            {% csrf_token %}
+                            {% if request.user in profile.followers.all %}
+                                <button type="submit" class="tooltip-container">
+                                    <span class="text">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 95 114"
+                                            class="svgIcon"
+                                        >
+                                            <rect fill="black" rx="28.5" height="57" width="57" x="19"></rect>
+                                            <path
+                                            fill="black"
+                                            d="M0 109.5C0 83.2665 21.2665 62 47.5 62V62C73.7335 62 95 83.2665 95 109.5V114H0V109.5Z"
+                                            ></path>
+                                        </svg>
+                                        Unfollow
+                                    </span>
+                                </button>
+                            {% else %}
+                                <button type="submit" class="tooltip-container">
+                                    <span class="text">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 95 114"
+                                            class="svgIcon"
+                                        >
+                                            <rect fill="black" rx="28.5" height="57" width="57" x="19"></rect>
+                                            <path
+                                            fill="black"
+                                            d="M0 109.5C0 83.2665 21.2665 62 47.5 62V62C73.7335 62 95 83.2665 95 109.5V114H0V109.5Z"
+                                            ></path>
+                                        </svg>
+                                        Follow
+                                    </span>
+                                </button>
+                            {% endif %}
+                        </form>
+                        
+                                                  
                     </div>
                 </div>
             </div>
 
             <div class="right-wrapper">
                 <div class="friends-container">
-                    Friends({{ friends|length }}): <br>
-                    <button class="send_friend_request_btn">Send friend request</button>
+                    {% if friends %}
+                        <h3>Friends ({{ friends|length }}):</h3>
+                        <ul class="friends-list">
+                            {% for friend in friends %}
+                                <li class="friend-item">
+                                    {% if friend.profiles.profile_pic %}
+                                        <a href="{% url 'auth_system:profile-detail' friend.profiles.first.id %}"><img src="{{ friend.profiles.profile_pic.url }}" class="friend-profile-pic" width="40" height="40"></a><span class="friend-username">{{ friend.username }}</span>
+                                    {% else %}
+                                        <a href="{% url 'auth_system:profile-detail' friend.profiles.first.id %}"><img src="{% static 'img/default-profile-pic.jpg' %}" class="friend-profile-pic" width="40" height="40"></a><span class="friend-username">{{ friend.username }}</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Friends (0): User has no friends yet.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -126,10 +197,12 @@
             <div class="posts-container">
                 {% if posts %}
                     {% for post in posts %}
-                        {{ post.title }}
+                        <a href="{% url 'posts:detail-post' post.id %}">
+                            <img src="{{ post.post_image.url }}">
+                        </a>
                     {% endfor %}
                 {% else %}
-                    No posts yet.
+                    <p>No posts yet.</p>
                 {% endif %}
             </div>
         </div>

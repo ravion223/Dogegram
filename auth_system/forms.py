@@ -7,12 +7,18 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'password1', 'password2')
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'placeholder': 'Enter username', 'class': 'input'})
+        self.fields['password1'].widget.attrs.update({'placeholder': 'Enter password', 'class': 'input'})
+        self.fields['password2'].widget.attrs.update({'placeholder': 'Confirm the password', 'class': 'input'})
 
 
 class SignInForm(AuthenticationForm):
-    class Meta:
-        model = CustomUser
-        fields = ('username', 'password')
+    def __init__(self, *args, **kwargs):
+        super(SignInForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'placeholder': 'Enter username', 'class': 'input'})
+        self.fields['password'].widget.attrs.update({'placeholder': 'Enter password', 'class': 'input'})
 
 
 class ProfileUpdateForm(ModelForm):

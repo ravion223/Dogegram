@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from .forms import SignUpForm, SignInForm, ProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, View, UpdateView, ListView
 from . import models
 from .utils import get_friend_request_or_false
-from .friend_request_status import FriendRequestStatus
+from django.contrib.auth.views import LoginView
 
 # Create your views here.
 
@@ -51,89 +51,40 @@ def login_view(request):
     )
 
 
+
 def logout_view(request):
     logout(request)
     return redirect('auth_system:sign-in')
 
 
-def profile_view(request, *args, **kwargs):
-    context = {}
+@login_required
+def profile_view(request, **kwargs):
     profile_id = kwargs.get('pk')
-    try:
-        profile = models.CustomUserProfile.objects.get(pk=profile_id)
-    except models.CustomUserProfile.DoesNotExist:
-        return HttpResponse('Profile not found.')
-
-    context['profile'] = profile
-    user = profile.user
-
-    try:
-        friend_list = models.FriendList.objects.get(user=user)
-    except models.FriendList.DoesNotExist:
-        friend_list = models.FriendList(user=user)
-        friend_list.save()
-
-    friends = friend_list.friends.all()
-    context['friends'] = friends
-    five_friends = friend_list.get_first_five_friends()
-    context['five_friends'] = five_friends
-
-    is_self = True
+    user = get_object_or_404(models.CustomUser, id=profile_id)
+    profile = user.profiles.first()
     is_friend = False
-    request_sent = FriendRequestStatus.NO_REQUEST_SENT.value
 
     if request.user.is_authenticated:
-        if request.user != user:
-            is_self = False
-            if friends.filter(pk=request.user.id).exists():
-                is_friend = True
-            else:
-                is_friend = False
-                if get_friend_request_or_false(sender=user, receiver=request.user):
-                    request_sent = FriendRequestStatus.THEM_SENT_TO_YOU.value
-                    context['pending_friend_request_id'] = get_friend_request_or_false(sender=user, receiver=request.user).id
-                elif get_friend_request_or_false(sender=request.user, receiver=user):
-                    request_sent = FriendRequestStatus.YOU_SENT_TO_THEM.value
+        is_friend = models.Friendship.objects.filter(
+            user1=request.user, user2=user
+        ).exists()
+
+    friendships = models.Friendship.objects.filter(user1=user) | models.Friendship.objects.filter(user2=user)
+    friends = set()
+    for friendship in friendships:
+        if friendship.user1 == user:
+            friends.add(friendship.user2)
         else:
-            try:
-                friend_requests = models.FriendRequest.objects.filter(receiver=request.user, is_active=True)
-            except models.FriendRequest.DoesNotExist:
-                friend_requests = None
-    else:
-        is_self = False
+            friends.add(friendship.user1)
 
-    context['is_self'] = is_self
-    context['is_friend'] = is_friend
-    context['request_sent'] = request_sent
-    context['friend_requests'] = friend_requests if is_self else None
-    context['posts'] = user.posts.all()
-
-    return render(
-        request,
-        'auth_system/profile-detail.html',
-        context
-    )
-
-# class ProfileDetailView(DetailView):
-#     model = models.CustomUserProfile
-#     template_name = 'auth_system/profile-detail.html'
-#     context_object_name = 'profile'
-
-
-# def get_my_profile_view(request):
-#     my_profile = models.CustomUserProfile.objects.get(user=request.user)
-#     profile = models.CustomUserProfile.objects.get(user=request.user)
-
-#     context = {
-#         'my_profile': my_profile,
-#         'profile': profile
-#     }
-
-#     return render(
-#         request,
-#         'auth_system/my-profile-detail.html',
-#         context
-#     )
+    context = {
+        'profile_user': user,
+        'profile': profile,
+        'is_friend': is_friend,
+        'posts': user.posts.all(),
+        'friends': friends
+    }
+    return render(request, 'auth_system/profile-detail.html', context)
 
 
 def update_profile_view(request):
@@ -158,47 +109,15 @@ def update_profile_view(request):
         context
     )
 
-# @login_required
-# def send_friend_request(request, to_user_id):
-#     if request.method == 'POST':
-#         to_user = models.CustomUser.objects.get(id=to_user_id)
-#         if to_user != request.user:
-#             friendship, created = models.Friendship.objects.get_or_create(from_user=request.user, to_user=to_user)
-#             if created:
-#                 messages.success(request, f'Friend request sent to {to_user.username}.')
-#                 models.Notification.objects.create(user=to_user, message=f'{request.user.username} has sent you friend request!')
-#             else:
-#                 messages.warning(request, f'Friend request already sent to {to_user.username}.')
-#         else:
-#             messages.error(request, 'You cannot send a friend request to yourself.')
 
-#     return redirect(
-#         'auth_system:profile-detail',
-#         pk=to_user_id
-#     )
-
-
-# def accept_friend_request(request, from_user):
-#     friendship = models.Friendship.objects.get(from_user=from_user, to_user=request.user)
-#     friendship.status = 'accepted'
-#     friendship.save()
-#     return friendship
-
-
-# def remove_friend(request, other_user):
-#     models.Friendship.objects.filter(
-#         models.Q(from_user=request.user, to_user=other_user) |
-#         models.Q(from_user=other_user, to_user=request.user)
-#     ).delete()
-
-
-# def friends(request):
-#     friends = models.Friendship.objects.filter(
-#         models.Q(from_user=request.user, status='accepted') |
-#         models.Q(to_user=request.user, status='accepted')
-#     ).select_related('from_user', 'to_user')
-#     return [f.from_user if f.from_user != request.user else f.to_user for f in friends]
-
+def follow_unfollow_view(request, profile_id):
+    profile = get_object_or_404(models.CustomUserProfile, id=profile_id)
+    if request.user in profile.followers.all():
+        profile.followers.remove(request.user)
+    else:
+        profile.followers.add(request.user)
+        models.Notification.objects.create(user=profile.user, message=f"{request.user.username} started following you")
+    return redirect('auth_system:profile-detail', pk=profile_id)
 
 class NotificationListView(ListView):
     model = models.Notification

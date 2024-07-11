@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'main_page',
     'auth_system',
     'posts',
+
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +74,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+ASGI_APPLICATION = 'core.asgi.application'
+
+# Channel layers
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 
 # Database

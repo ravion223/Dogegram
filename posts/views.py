@@ -2,7 +2,7 @@ from django.forms import BaseModelForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from auth_system import models as auth_models
 from . import models
 from . import forms
@@ -26,6 +26,24 @@ class PostCreateView(CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
     
+
+class PostUpdateView(UpdateView):
+    model = models.Post
+    form_class = forms.PostUpdateForm
+    template_name = 'posts/post-update.html'
+    
+    def get_success_url(self, **kwargs) -> str:
+        return reverse_lazy('posts:detail-post', kwargs={'pk': self.object.id})
+
+
+def delete_post(request, post_id):
+    if request.method == 'POST':
+        post = get_object_or_404(models.Post, id=post_id)
+        post.delete()
+        return JsonResponse({'message': 'Post deleted successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+
 
 class PostDetailView(DetailView):
     model = models.Post

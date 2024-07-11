@@ -50,6 +50,10 @@
                         </button>
                     {% endif %}
                 </form>
+                {% if request.user == post.author %}
+                    <a href="{% url 'posts:update-post' post.id %}">Update</a>
+                    <a class="delete-post-button" data-post-id="{{ post.pk }}">Delete</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -148,6 +152,27 @@
                     },
                     error: function(xhr, status, error) {
                         console.error('Error deleting commentary:', error);
+                    }
+                });
+            }
+        });
+    });
+    $(document).ready(function() {
+        $('.delete-post-button').click(function() {
+            var postIdToDelete = $(this).data('post-id');
+            if (confirm('Are you sure you want to delete this post?')) {
+                $.ajax({
+                    url: '/delete-post/' + postIdToDelete + '/',
+                    method: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        console.log('Post deleted successfully!');
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error deleting post:', error);
                     }
                 });
             }

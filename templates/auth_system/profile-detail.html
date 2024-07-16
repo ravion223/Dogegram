@@ -165,7 +165,10 @@
                                 </button>
                             {% endif %}
                         </form>
-                        
+
+                        {% if is_friend %}
+                            <a href="{% url 'chats:start-chat' profile_user.id %}">Chat</a>
+                        {% endif %}
                                                   
                     </div>
                 </div>

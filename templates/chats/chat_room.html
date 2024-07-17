@@ -1,97 +1,144 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 {% block content %}
-<div class="chat-room">
-    <div id="chat-log">
-        {% for message in messages %}
-        <div class="message">
-            {% if message.sender.profiles.first.profile_pic %}
+<div class="chat-window">
+  <div id="chat-log">
+    {% for message in messages %}
+      <div class="message">
+        {% if message.sender.profiles.first.profile_pic %}
+            <a href="{% url 'auth_system:profile-detail' message.sender.profiles.first.id  %}">
                 <img class="profile-pic-message" src="{{ message.sender.profiles.first.profile_pic.url }}" width="30" height="30">
-            {% else %}
+            </a>
+        {% else %}
+            <a href="{% url 'auth_system:profile-detail' message.sender.profiles.first.id  %}">
                 <img class="profile-pic" src="{% static 'img/default-profile-pic.jpg' %}" width="30" height="30">
+            </a>
+        {% endif %}
+        <div class="message-content">
+          <strong>{{ message.sender.username }}</strong>: <p class="editableText" id="editableText-{{ message.pk }}">{{ message.content }}</p>
+          {% if message.media %}
+            {% if message.media.url|is_image %}
+              <img class="message-media" src="{{ message.media.url }}" alt="Image" width="350" height="350">
+            {% elif message.media.url|is_video %}
+              <video class="message-media" controls width="350" height="350">
+                <source src="{{ message.media.url }}" type="video/{{ message.media.url|slice:"-3" }}">
+                Your browser does not support the video tag.
+              </video>
             {% endif %}
-            <div class="message-content">
-                <strong>{{ message.sender.username }}</strong>: <p class="editableText" id="editableText-{{ message.pk }}">{{ message.content }}</p>
-            </div>
-            {% if message.sender == request.user %}
-                <div>
-                    <button class="edit-button" data-message-id="{{ message.pk }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                        </svg> Edit
-                    </button>
-                    <button class="delete-button" data-message-id="{{ message.pk }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 5h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5H6a.5.5 0 0 1-.5-.5v-7zm-1 0V13a1.5 1.5 0 0 0 1.5 1.5h4A1.5 1.5 0 0 0 11 13V5.5h-6zM4.118 4.118A1.5.5 0 0 1 5.5 3.5h5a1.5.5 0 0 1 1.382.618l1 1A1.5.5 0 0 1 13 5.5H3a1.5 1.5 0 0 1 .618-1.382l1-1zM8 0a.5.5 0 0 1 .5.5V1h3a.5.5 0 0 1 0 1H3.5a.5.5 0 0 1 0-1h3V.5A.5.5 0 0 1 8 0z"/>
-                        </svg> Delete
-                    </button>
-                </div>
-            {% endif %}
+          {% endif %}
         </div>
-        {% endfor %}
-    </div>
-    <form id="chat-form" method="post" action="{% url 'chats:chat-room' room_name %}">
-        {% csrf_token %}
-        <input type="text" name="message" placeholder="Type your message here...">
-        <button type="submit">Send</button>
-    </form>
+        {% if message.sender == request.user %}
+            <div class="message-buttons">
+                <button class="edit-button" data-message-id="{{ message.pk }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                    </svg> Edit
+                </button>
+                <button class="delete-button" data-message-id="{{ message.pk }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 5h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5H6a.5.5 0 0 1-.5-.5v-7zm-1 0V13a1.5 1.5 0 0 0 1.5 1.5h4A1.5 1.5 0 0 0 11 13V5.5h-6zM4.118 4.118A1.5.5 0 0 1 5.5 3.5h5a1.5.5 0 0 1 1.382.618l1 1A1.5.5 0 0 1 13 5.5H3a1.5 1.5 0 0 1 .618-1.382l1-1zM8 0a.5.5 0 0 1 .5.5V1h3a.5.5 0 0 1 0 1H3.5a.5.5 0 0 1 0-1h3V.5A.5.5 0 0 1 8 0z"/>
+                    </svg> Delete
+                </button>
+            </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  <form id="chat-form" method="post" action="{% url 'chats:chat-room' room_name %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send</button>
+  </form>
 </div>
 
 <style>
-.chat-room {
-    width: 80%;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f9f9f9;
+.chat-window {
+  width: 80%;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
 }
 
 #chat-log {
-    max-height: 400px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  background-color: #fff;
 }
 
 .message {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: flex-start;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
 
-.profile-pic-message {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
+.profile-pic-message, .profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .message-content {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
+  flex-grow: 1;
 }
 
 .message strong {
-    color: #333;
+  color: #333;
 }
 
-.editableText {
-    display: inline-block;
-    margin-left: 5px;
-    padding: 5px;
-    border-radius: 3px;
+.message-media {
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
+  border-radius: 5px;
 }
+
+#chat-form {
+  margin-top: 20px; 
+  padding: 10px; 
+  border-top: 1px solid #ddd; 
+  background-color: #fff; 
+  border-radius: 0 0 10px 10px; 
+}
+
+#chat-form input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+#chat-form button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #3AAE00;
+  color: white;
+  cursor: pointer;
+}
+
+#chat-form button:hover {
+  background-color: #2E8E00;
+}
+
 
 .editableText[contenteditable="true"] {
     border: 1px solid #ddd;
     background-color: #f0f0f0;
+}
+
+.message-buttons {
+    margin-top: 5px;
 }
 
 .edit-button,
@@ -107,33 +154,6 @@
 .edit-button:hover,
 .delete-button:hover {
     background-color: #f0f0f0;
-}
-
-#chat-form {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#chat-form input[type="text"] {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
-#chat-form button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-}
-
-#chat-form button:hover {
-    background-color: #0056b3;
 }
 
 </style>

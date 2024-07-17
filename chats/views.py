@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from . import models
 from django.contrib.auth import get_user_model
 from auth_system import models as auth_models
+from . import forms
 # Create your views here.
 
 
@@ -14,14 +15,30 @@ User = get_user_model()
 def chat_room(request, room_name):
     room, created = models.ChatRoom.objects.get_or_create(name=room_name)
     messages = models.Message.objects.filter(room=room)
+    form = forms.MessageForm()
 
     if request.user not in room.participants.all():
         return redirect('main_page:main-page')
 
+    # if request.method == 'POST':
+    #     # content = request.POST.get('message')
+    #     form = forms.MessageForm(request.POST, request.FILES)
+    #     if content:
+    #         models.Message.objects.create(room=room, sender=request.user, content=content)
+
+    #         participants = room.participants.all()
+    #         friend_user = next(user for user in participants if user != request.user)
+
+    #         auth_models.Notification.objects.create(user=friend_user, message=f"{request.user.username} has sent you a message!")
+
+    #         return redirect('chats:chat-room', room_name=room_name)
+
     if request.method == 'POST':
-        content = request.POST.get('message')
-        if content:
-            models.Message.objects.create(room=room, sender=request.user, content=content)
+        form = forms.MessageForm(request.POST, request.FILES)
+        if form.is_valid():
+            content = form.cleaned_data['content']
+            media = form.cleaned_data['media']
+            models.Message.objects.create(room=room, sender=request.user, content=content, media=media)
 
             participants = room.participants.all()
             friend_user = next(user for user in participants if user != request.user)
@@ -33,7 +50,8 @@ def chat_room(request, room_name):
     return render(request, 'chats/chat_room.html', {
         'room': room,
         'messages': messages,
-        'room_name': room_name
+        'room_name': room_name,
+        'form': form
     })
 
 

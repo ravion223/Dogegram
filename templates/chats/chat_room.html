@@ -22,7 +22,7 @@
               <img class="message-media" src="{{ message.media.url }}" alt="Image" width="350" height="350">
             {% elif message.media.url|is_video %}
               <video class="message-media" controls width="350" height="350">
-                <source src="{{ message.media.url }}" type="video/{{ message.media.url|slice:"-3" }}">
+                <source src="{{ message.media.url }}" type="video/{{ message.media.url|is_video }}">
                 Your browser does not support the video tag.
               </video>
             {% endif %}

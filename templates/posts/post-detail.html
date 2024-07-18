@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 {% block content %}
 
 <div class="content-wrap">
@@ -18,7 +19,15 @@
             <div class="post-detail">
                 <div class="post-title">{{ post.title }}</div>
                 {% if post.post_image %}
-                    <img src="{{ post.post_image.url }}" class="post-image-detail">
+                    {% if post.post_image.url|is_image %}
+                        <img src="{{ post.post_image.url }}" class="post-image-detail">
+                    {% elif post.post_image.url|is_video %}
+                        <video class="message-media" controls width="350" height="350">
+                            <source src="{{ post.post_image.url }}" type="video/{{ post.post_image.url|is_video }}">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p>If the video does not play, please check if the video format is supported by your browser and if the video URL is correct: {{ post.post_image.url }}</p>
+                    {% endif %}
                 {% endif %}
                 <div class="description">{{ post.description }}</div>
                 <div class="creation-date">{{ post.creation_date }}</div>

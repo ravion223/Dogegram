@@ -1,7 +1,13 @@
 from django.db import models
+from django.forms import ValidationError
 from auth_system.models import CustomUser
+import mimetypes
 
 # Create your models here.
+def validate_media_type(value):
+    mime = mimetypes.guess_type(value.name)[0]
+    if mime not in ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm']:
+        raise ValidationError('Unsupported file type.')
 
 
 class Post(models.Model):
@@ -9,7 +15,7 @@ class Post(models.Model):
     likes = models.ManyToManyField(CustomUser, related_name='liked_post')
 
     title = models.CharField(max_length=100, blank=True, null=True)
-    post_image = models.ImageField(upload_to='posts/', blank=True, null=True)
+    post_image = models.FileField(upload_to='posts/', validators=[validate_media_type], blank=True, null=True)
     description = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
 

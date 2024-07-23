@@ -23,3 +23,16 @@ class IndexView(TemplateView):
         unread_notifications = models.Notification.objects.filter(user=self.request.user, is_read=False).count()
         context["unread_notifications"] = unread_notifications
         return context
+    
+
+def search_view(request):
+    query = request.GET.get('q', '')
+    users = models.CustomUser.objects.filter(username__icontains=query)
+    posts = Post.objects.filter(description__icontains=query)
+    
+    context = {
+        'query': query,
+        'users': users,
+        'posts': posts,
+    }
+    return render(request, 'main_page/search-results.html', context)

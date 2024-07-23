@@ -44,7 +44,8 @@ INSTALLED_APPS = [
 
     'channels',
 
-    'chats'
+    'chats',
+    'communities'
 ]
 
 MIDDLEWARE = [

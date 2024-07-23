@@ -2,6 +2,7 @@ from django.db import models
 from django.forms import ValidationError
 from auth_system.models import CustomUser
 import mimetypes
+from communities.models import Community
 
 # Create your models here.
 def validate_media_type(value):
@@ -11,6 +12,7 @@ def validate_media_type(value):
 
 
 class Post(models.Model):
+    community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='posts', blank=True, null=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts')
     likes = models.ManyToManyField(CustomUser, related_name='liked_post')
 

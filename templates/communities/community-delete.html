@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <form action="{% url 'communities:community-delete' community.pk %}" method="post">
+        {% csrf_token %}
+        Are you sure you want to delete this community?
+        <button type="submit">Delete</button>
+    </form>
+
+{% endblock content %}

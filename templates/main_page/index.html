@@ -59,7 +59,20 @@
         </div>
         <div class="widget popular-communities">
             <h3>Communities</h3>
-            <p>Community1, Community2, Community3...</p>
+
+            <a href="{% url 'communities:community-create' %}">
+                <button>
+                    Create community
+                </button>
+            </a> <br>
+            
+            {% if communities %}
+                {% for community in communities %}
+                    {{ community.name }} <br>
+                {% endfor %}
+            {% else %}
+                No communities yet.
+            {% endif %}
         </div>
     </aside>
 </div>

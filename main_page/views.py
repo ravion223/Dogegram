@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from auth_system import models
 from posts.models import Post
+from communities.models import Community
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -20,6 +21,7 @@ class IndexView(TemplateView):
         else:
             context['profile'] = None
         context['posts'] = Post.objects.all()
+        context['communities'] = Community.objects.all()
         unread_notifications = models.Notification.objects.filter(user=self.request.user, is_read=False).count()
         context["unread_notifications"] = unread_notifications
         return context

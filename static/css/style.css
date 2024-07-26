@@ -203,7 +203,7 @@ footer {
     justify-content: flex-start;
 }
 
-.posts-container img {
+.posts-container img, video {
     width: calc(50% - 10px);
     height: auto;
     border-radius: 10px;
@@ -1003,4 +1003,19 @@ footer {
 .friend-username {
     font-size: 16px;
     color: #333;
+}
+
+.community-name {
+    font-size: 0.9em;
+    color: #555;
+    margin-left: 10px;
+    padding: 2px 4px;
+    background-color: #f3f3f3;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.community-name a{
+    text-decoration: none;
+    color: #555;
 }

@@ -15,6 +15,9 @@
                     {% endif %}
                 </a>
                 <div class="username">{{ post.author.username }}</div>
+                {% if post.community %}
+                    <div class="community-name"><a href="{% url 'communities:community-detail' post.community.id %}">r/{{ post.community.name }}</a></div>
+                {% endif %}
             </div>
             <div class="post-detail">
                 <div class="post-title">{{ post.title }}</div>

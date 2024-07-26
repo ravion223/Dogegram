@@ -2,10 +2,18 @@
 {% block content %}
 <div class="post-creation-container">
     <h2>Create New Post</h2>
-    <form action="{% url 'posts:create-post' %}" method="post" enctype="multipart/form-data" class="post-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-publish">Publish</button>
-    </form>
+    {% if community %}
+        <form action="{% url 'posts:create-community-post' community.id %}" method="post" enctype="multipart/form-data" class="post-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-publish">Publish</button>
+        </form>
+    {% else %}
+        <form action="{% url 'posts:create-post' %}" method="post" enctype="multipart/form-data" class="post-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-publish">Publish</button>
+        </form>
+    {% endif %}
 </div>
 {% endblock content %}

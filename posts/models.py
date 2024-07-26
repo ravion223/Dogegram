@@ -14,7 +14,7 @@ def validate_media_type(value):
 class Post(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='posts', blank=True, null=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts')
-    likes = models.ManyToManyField(CustomUser, related_name='liked_post')
+    likes = models.ManyToManyField(CustomUser, related_name='liked_post', blank=True)
 
     title = models.CharField(max_length=100, blank=True, null=True)
     post_image = models.FileField(upload_to='posts/', validators=[validate_media_type], blank=True, null=True)

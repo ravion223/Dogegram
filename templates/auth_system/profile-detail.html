@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 {% block content %}
 
 <div class="content-wrapper">
@@ -52,7 +53,7 @@
                             {% for friend in friends %}
                                 <li class="friend-item">
                                     {% if friend.profiles.profile_pic %}
-                                        <a href="{% url 'auth_system:profile-detail' friend.profiles.first.id %}"><img src="{{ friend.profiles.profile_pic.url }}" class="friend-profile-pic" width="40" height="40"></a><span class="friend-username">{{ friend.username }}</span>
+                                        <a href="{% url 'auth_system:profile-detail' friend.profiles.first.id %}"><img src="{{ friend.user.profiles.first.profile_pic.url }}" class="friend-profile-pic" width="40" height="40"></a><span class="friend-username">{{ friend.username }}</span>
                                     {% else %}
                                         <a href="{% url 'auth_system:profile-detail' friend.profiles.first.id %}"><img src="{% static 'img/default-profile-pic.jpg' %}" class="friend-profile-pic" width="40" height="40"></a><span class="friend-username">{{ friend.username }}</span>
                                     {% endif %}
@@ -70,9 +71,18 @@
             <div class="posts-container">
                 {% if posts %}
                     {% for post in posts %}
-                        <a href="{% url 'posts:detail-post' post.id %}">
-                            <img src="{{ post.post_image.url }}">
-                        </a>
+                        {% if post.post_image %}
+                            {% if post.post_image.url|is_image %}
+                                <a href="{% url 'posts:detail-post' post.id %}"><img src="{{ post.post_image.url }}"></a>
+                            {% elif post.post_image.url|is_video %}
+                                <a href="{% url 'posts:detail-post' post.id %}">
+                                    <video class="message-media" controls width="350" height="350">
+                                        <source src="{{ post.post_image.url }}" type="video/{{ post.post_image.url|is_video }}">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </a>
+                            {% endif %}
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     <p>No posts yet.</p>
@@ -200,9 +210,18 @@
             <div class="posts-container">
                 {% if posts %}
                     {% for post in posts %}
-                        <a href="{% url 'posts:detail-post' post.id %}">
-                            <img src="{{ post.post_image.url }}">
-                        </a>
+                        {% if post.post_image %}
+                            {% if post.post_image.url|is_image %}
+                                <a href="{% url 'posts:detail-post' post.id %}"><img src="{{ post.post_image.url }}"></a>
+                            {% elif post.post_image.url|is_video %}
+                                <a href="{% url 'posts:detail-post' post.id %}">
+                                    <video class="message-media" controls width="350" height="350">
+                                        <source src="{{ post.post_image.url }}" type="video/{{ post.post_image.url|is_video }}">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </a>
+                            {% endif %}
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     <p>No posts yet.</p>

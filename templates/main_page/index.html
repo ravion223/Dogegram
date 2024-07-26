@@ -8,17 +8,19 @@
         <h2>News Feed</h2>
         {% if posts %}
             <div class="post">
-            {% for post in posts %}
-                
+                {% for post in posts %}
                     <div class="post-header">
                         <a href="{% url 'auth_system:profile-detail' post.author.profiles.first.id %}">
                             {% if post.author.profiles.first.profile_pic %}
-                                <img src="{{ post.author.profiles.first.profile_pic.url }}" width="50" height="50">
+                                <img src="{{ post.author.profiles.first.profile_pic.url }}" class="profile-pic-mini">
                             {% else %}
-                                <img src="{% static 'img/default-profile-pic.jpg' %}" width="50" height="50">
+                                <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic-mini">
                             {% endif %}
                         </a>
                         <div class="profile-username">{{ post.author.username }}</div>
+                        {% if post.community %}
+                            <div class="community-name"><a href="{% url 'communities:community-detail' post.community.id %}">r/{{ post.community.name }}</a></div>
+                        {% endif %}
                     </div>
                     {% if post.title %}
                         <div class="post-title">{{ post.title }}</div>
@@ -33,7 +35,6 @@
                             </video>
                         {% endif %}
                     {% endif %}
-                    <div>
                     <div class="description">{{ post.description }}</div>
                     <div class="creation-date">{{ post.creation_date }}</div>
                     <a href="{% url 'posts:detail-post' post.pk %}">
@@ -44,9 +45,7 @@
                             <p class="text">Comment</p>
                         </button>
                     </a>
-                
-                <br>
-            {% endfor %}
+                {% endfor %}
             </div>
         {% else %}
             <p>Latest posts from your friends and groups will appear here.</p>
@@ -58,22 +57,140 @@
             <p>Group1, Group2, Group3...</p>
         </div>
         <div class="widget popular-communities">
-            <h3>Communities</h3>
-
+            <h3>Popular Communities</h3>
             <a href="{% url 'communities:community-create' %}">
-                <button>
+                <button class="create-community-btn">
                     Create community
                 </button>
-            </a> <br>
-            
-            {% if communities %}
-                {% for community in communities %}
-                    {{ community.name }} <br>
-                {% endfor %}
-            {% else %}
-                No communities yet.
-            {% endif %}
+            </a>
+            <div class="community-list">
+                {% if communities %}
+                    {% for community in communities %}
+                        <div class="community-item">
+                            {% if community.community_logo %}
+                                <img src="{{ community.community_logo.url }}" class="community-logo">
+                            {% else %}
+                                <img src="{% static 'img/dogo.png' %}" class="community-logo">
+                            {% endif %}
+                            <a href="{% url 'communities:community-detail' community.id %}">r/{{ community.name }}</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No communities yet.</p>
+                {% endif %}
+            </div>
         </div>
     </aside>
 </div>
+
+<style>
+a {
+    text-decoration: none;
+}
+.content-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.news-feed {
+    flex: 3;
+    margin-right: 20px;
+}
+
+.widgets {
+    flex: 1;
+}
+
+/* Post Styling */
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.profile-pic-mini {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-username, .community-name {
+    font-weight: bold;
+}
+
+.post-title {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.post-image {
+    width: 100%;
+    height: auto;
+    margin: 10px 0;
+}
+
+.description, .creation-date {
+    margin: 5px 0;
+}
+
+
+/* Widget Styling */
+.widget {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.widget h3 {
+    margin-bottom: 15px;
+}
+
+.create-community-btn {
+    display: block;
+    width: 100%;
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    text-decoration: none;
+}
+
+.community-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.community-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.community-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.community-item a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.community-item a:hover {
+    text-decoration: underline;
+}
+
+
+</style>
+
 {% endblock content %}

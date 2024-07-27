@@ -97,7 +97,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'dogegram',
         'USER': 'rostyslav_db',
-        'PASSWORD': 'Roblox2207'
+        'PASSWORD': 'Roblox2207',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 

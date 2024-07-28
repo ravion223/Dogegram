@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-v&q&7)z4l5&(=r*q_jhqt-%fron-_4y8g^x6(^n1@gt&cyxt$=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -98,8 +98,6 @@ DATABASES = {
         'NAME': 'dogegram',
         'USER': 'rostyslav_db',
         'PASSWORD': 'Roblox2207',
-        'HOST': 'localhost',
-        'PORT': '5432'
     }
 }
 
@@ -145,7 +143,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_ROOT = '/static/'
 
-ALLOWED_HOSTS = ['.onrender.com']
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -156,6 +153,8 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOGIN_URL = '/sign-in/'
 
 AUTH_USER_MODEL = 'auth_system.CustomUser'
 

@@ -22,14 +22,8 @@ class IndexView(TemplateView):
             context['profile'] = None
         context['posts'] = Post.objects.all()
         context['communities'] = Community.objects.all()
-        if self.request.user.is_authenticated:
-            try:
-                unread_notifications = models.Notification.objects.filter(user=self.request.user, is_read=False).count()
-                context["unread_notifications"] = unread_notifications
-            except models.CustomUser.DoesNotExist:
-                context["unread_notifications"] = None
-            else:
-                context["unread_notifications"] = None
+        unread_notifications = models.Notification.objects.filter(user=self.request.user, is_read=False).count()
+        context["unread_notifications"] = unread_notifications
         return context
     
 

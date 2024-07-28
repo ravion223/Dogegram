@@ -88,15 +88,14 @@ def profile_view(request, **kwargs):
 
 
 def update_profile_view(request):
+    profile = models.CustomUserProfile.objects.get(user=request.user)
     if request.method == 'POST':
-        profile = models.CustomUserProfile.objects.get(user=request.user)
         form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/my-profile/')
+            return redirect('auth_system:profile-detail', profile.id)
     else:
-        form = ProfileUpdateForm()
-        profile = models.CustomUserProfile.objects.get(user=request.user)
+        form = ProfileUpdateForm(instance=profile)
     
     context = {
         'form': form,

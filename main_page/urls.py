@@ -1,8 +1,9 @@
 from django.urls import path
 from .views import IndexView, search_view
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='main-page'),
+    path('', login_required(IndexView.as_view()), name='main-page'),
     path('search/', search_view, name='search')
 ]
 

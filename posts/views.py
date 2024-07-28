@@ -127,15 +127,18 @@ def like_post(request, pk):
     return HttpResponseRedirect(reverse('posts:detail-post', args=[str(pk)]))
 
 
-def like_post_main(request, pk):
-    post = get_object_or_404(models.Post, id=request.POST.get('post_id'))
+def like_comment(request, pk, post_id):
+    comment = get_object_or_404(models.Commentary, pk=pk)
     liked = False
-    if post.likes.filter(id=request.user.id).exists():
-        post.likes.remove(request.user)
+    if comment.likes.filter(id=request.user.id).exists():
+        comment.likes.remove(request.user)
         liked = False
     else:
-        post.likes.add(request.user)
+        comment.likes.add(request.user)
         liked = True
+        auth_models.Notification.objects.create(user=comment.author, message=f"{request.user.username} liked your comment!")
+
+    return HttpResponseRedirect(reverse('posts:detail-post', args=[str(post_id)]))
 
 
 def update_text(request, comment_id):

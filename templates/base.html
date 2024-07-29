@@ -31,8 +31,13 @@
                 </form>
             </div>
             {% if request.user.is_authenticated %}
-                <div class="create-post-btn">
-                    <a href="{% url 'posts:create-post' %}">Create post</a>
+                <div>
+                    <a href="{% url 'posts:create-post' %}">
+                        <button class="create-post-btn">
+                        <span>
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg> Create
+                        </span>
+                      </button></a>
                 </div>
             {% endif %}
             {% if not request.user.is_authenticated %}

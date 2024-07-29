@@ -1,10 +1,75 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 
+<link rel="stylesheet" type="text/css" href="{% static 'css/community_create.css' %}">
+
+<div class="form-container">
+    <h2>Create a Community</h2>
     <form action="{% url 'communities:community-create' %}" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Create</button>
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="submit-btn">Create</button>
     </form>
+</div>
+
+<style>
+    .form-container {
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+</style>
 
 {% endblock content %}

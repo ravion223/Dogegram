@@ -5,15 +5,35 @@
     {% if community %}
         <form action="{% url 'posts:create-community-post' community.id %}" method="post" enctype="multipart/form-data" class="post-form">
             {% csrf_token %}
-            {{ form.as_p }}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
             <button type="submit" class="btn btn-publish">Publish</button>
         </form>
     {% else %}
         <form action="{% url 'posts:create-post' %}" method="post" enctype="multipart/form-data" class="post-form">
             {% csrf_token %}
-            {{ form.as_p }}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
             <button type="submit" class="btn btn-publish">Publish</button>
         </form>
     {% endif %}
 </div>
+
+<style>
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="file"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+</style>
 {% endblock content %}

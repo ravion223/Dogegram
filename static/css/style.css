@@ -118,11 +118,11 @@ footer {
     background-color: #f4f2f2;
     border: 1px solid #333;
     color: #646464;
-    padding: 0.7rem 1rem;
+    padding: 0.7rem 2rem;
     border-radius: 30px;
     width: 12em;
     transition: all ease-in-out .5s;
-    margin-right: -2em;
+    margin-right: -2.4em;
   }
   
   .search__input:hover, .search__input:focus {
@@ -782,7 +782,7 @@ footer {
     text-align: center;
 }
 
-/* Post Creation Page Styles */
+
 .post-creation-container {
     max-width: 600px;
     margin: 50px auto;
@@ -836,7 +836,7 @@ footer {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #0022ff;
+    background-color: #28a745;
     color: #fff;
     font-size: 16px;
     cursor: pointer;
@@ -844,7 +844,7 @@ footer {
 }
 
 .btn-publish:hover {
-    background-color: #04088b;
+    background-color: #28a746aa;
 }
 
 
@@ -1022,4 +1022,25 @@ footer {
 .community-name a{
     text-decoration: none;
     color: #555;
+}
+
+.create-post-btn {
+    border: 2px solid #28a745;
+    background-color: #28a745;
+    border-radius: 0.9em;
+    padding: 0.8em 1.2em 0.8em 1em;
+    transition: all ease-in-out 0.2s;
+    font-size: 16px;
+}
+
+.create-post-btn span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-weight: 600;
+}
+
+.create-post-btn:hover {
+    background-color: #28a746aa;
 }

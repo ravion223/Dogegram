@@ -28,7 +28,7 @@ class Post(models.Model):
         return self.likes.count()
     
     class Meta:
-        ordering = ['creation_date']
+        ordering = ['-creation_date']
         verbose_name = 'Post'
         verbose_name_plural = 'Posts'
 
@@ -48,6 +48,6 @@ class Commentary(models.Model):
         return self.likes.count()
     
     class Meta:
-        ordering = ['creation_date']
+        ordering = ['-creation_date']
         verbose_name = 'Commentary'
         verbose_name_plural = 'Commentaries'

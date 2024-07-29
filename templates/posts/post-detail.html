@@ -82,7 +82,7 @@
     {% for commentary in commentaries %}
         <div class="comment-card">
             <div class="comment-author">
-                {% if commentary.author.profiles.first.profile_pic.url %}
+                {% if commentary.author.profiles.first.profile_pic %}
                     <img class="profile-pic" src="{{ commentary.author.profiles.first.profile_pic.url }}" width="40" height="40">
                 {% else %}
                     <img class="profile-pic" src="{% static 'img/default-profile-pic.jpg' %}" width="40" height="40">

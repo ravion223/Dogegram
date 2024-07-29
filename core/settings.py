@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v&q&7)z4l5&(=r*q_jhqt-%fron-_4y8g^x6(^n1@gt&cyxt$='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = True
+# DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
@@ -98,11 +99,13 @@ DATABASES = {
         'NAME': 'dogegram',
         'USER': 'rostyslav_db',
         'PASSWORD': 'Roblox2207',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
 # database_url = os.environ.get('DATABASE_URL')
-DATABASES['default']= dj_database_url.parse('postgresql://rostyslav:AtMRpYZH1FjtJhrMheyVUHfSIUB71v9m@dpg-cqick98gph6c738n2e30-a/dogegram')
+DATABASES['default']= dj_database_url.parse('postgresql://rostyslav:AtMRpYZH1FjtJhrMheyVUHfSIUB71v9m@dpg-cqick98gph6c738n2e30-a.frankfurt-postgres.render.com/dogegram')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

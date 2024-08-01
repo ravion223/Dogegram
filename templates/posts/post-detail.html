@@ -20,7 +20,9 @@
                 {% endif %}
             </div>
             <div class="post-detail">
-                <div class="post-title">{{ post.title }}</div>
+                {% if post.title %}
+                    <div class="post-title">{{ post.title }}</div>
+                {% endif %}
                 {% if post.post_image %}
                     {% if post.post_image.url|is_image %}
                         <img src="{{ post.post_image.url }}" class="post-image-detail">

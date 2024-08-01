@@ -42,6 +42,7 @@ header h1 {
 .btn {
     padding: 10px 20px;
     text-decoration: none;
+    text-align: center;
     color: white;
     background-color: #007bff;
     border: none;
@@ -197,7 +198,6 @@ footer {
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -208,8 +208,8 @@ footer {
 }
 
 .posts-container img, video {
-    width: calc(50% - 10px);
-    height: auto;
+    /* width: calc(50% - 10px);
+    height: auto; */
     border-radius: 10px;
 }
 

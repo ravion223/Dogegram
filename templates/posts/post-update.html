@@ -3,9 +3,28 @@
 <div class="post-creation-container">
     <h2>Update Post</h2>
     <form action="{% url 'posts:update-post' post.id %}" method="post" enctype="multipart/form-data" class="post-form">
-        {% csrf_token %}
-        {{ form.as_p }}
+        <div class="form-group">
+            {% csrf_token %}
+            {{ form.as_p }}
+        </div>
         <button type="submit" class="btn btn-publish">Update</button>
     </form>
 </div>
+
+<style>
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="file"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+</style>
+
 {% endblock content %}

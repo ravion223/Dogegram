@@ -307,7 +307,6 @@ footer {
     margin-top: 50px;
 }
 
-/* News feed posts style */
 
 .content-container {
     display: flex;
@@ -356,8 +355,8 @@ footer {
 }
 
 .post img.post-image {
-    width: 90%;
-    height: auto;
+    width: 60%;
+    height: 10%;
     border-radius: 10px;
     margin-bottom: 10px;
 }

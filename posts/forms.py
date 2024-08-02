@@ -44,3 +44,12 @@ class CommentaryCreateForm(forms.models.ModelForm):
     class Meta:
         model = models.Commentary
         fields = ('content',)
+
+
+class PostsFilterForm(forms.models.ModelForm):
+    POSTS_CHOICES = [
+        ('', 'All'),
+        ('friends', 'Friends')
+    ]
+    
+    posts = forms.ChoiceField(choices=POSTS_CHOICES, label='status', required=False)

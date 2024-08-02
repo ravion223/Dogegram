@@ -15,7 +15,17 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return f"User - {self.username}"
-    
+
+    def get_friends(self):
+        friendships1 = Friendship.objects.filter(user1=self)
+        friendships2 = Friendship.objects.filter(user2=self)
+        friends = set()
+        for friendship in friendships1:
+            friends.add(friendship.user2)
+        for friendship in friendships2:
+            friends.add(friendship.user1)
+        return friends
+
     class Meta:
         ordering = ['username']
         verbose_name = 'User'

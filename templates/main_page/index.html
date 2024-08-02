@@ -7,6 +7,10 @@
     <section class="news-feed">
         <h2>News Feed</h2>
         {% if posts %}
+            <div>
+                <a href="?filter=all">All Posts</a> | 
+                <a href="?filter=friends">Friends' Posts</a>
+            </div>
             <div class="post">
                 {% for post in posts %}
                     <div class="post-header">
@@ -102,7 +106,6 @@ a {
     flex: 1;
 }
 
-/* Post Styling */
 .post-header {
     display: flex;
     align-items: center;
@@ -136,7 +139,6 @@ a {
 }
 
 
-/* Widget Styling */
 .widget {
     background-color: #f9f9f9;
     padding: 15px;

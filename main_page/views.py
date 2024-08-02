@@ -12,6 +12,10 @@ class IndexView(TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        filter_option = self.request.GET.get('filter', 'all')
+        context['filter_option'] = filter_option
+        user = self.request.user
+
         if self.request.user.is_authenticated:
             try:
                 profile = models.CustomUserProfile.objects.get(user=self.request.user)
@@ -20,7 +24,13 @@ class IndexView(TemplateView):
                 context['profile'] = None
         else:
             context['profile'] = None
-        context['posts'] = Post.objects.all()
+
+        if filter_option == 'friends':
+            friends = user.get_friends()
+            context['posts'] = Post.objects.filter(author__in=friends)
+        else:
+            context['posts'] = Post.objects.all()
+
         context['communities'] = Community.objects.all()
         unread_notifications = models.Notification.objects.filter(user=self.request.user, is_read=False).count()
         context["unread_notifications"] = unread_notifications

@@ -13,6 +13,10 @@ header {
     border-bottom: 2px solid #b4b4b4;
 }
 
+a {
+    text-decoration: none;
+}
+
 .header-container {
     display: flex;
     flex: 1;
@@ -38,6 +42,7 @@ header h1 {
 .btn {
     padding: 10px 20px;
     text-decoration: none;
+    text-align: center;
     color: white;
     background-color: #007bff;
     border: none;
@@ -114,11 +119,11 @@ footer {
     background-color: #f4f2f2;
     border: 1px solid #333;
     color: #646464;
-    padding: 0.7rem 1rem;
+    padding: 0.7rem 2rem;
     border-radius: 30px;
     width: 12em;
     transition: all ease-in-out .5s;
-    margin-right: -2em;
+    margin-right: -2.4em;
   }
   
   .search__input:hover, .search__input:focus {
@@ -193,7 +198,6 @@ footer {
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -203,9 +207,9 @@ footer {
     justify-content: flex-start;
 }
 
-.posts-container img {
-    width: calc(50% - 10px);
-    height: auto;
+.posts-container img, video {
+    /* width: calc(50% - 10px);
+    height: auto; */
     border-radius: 10px;
 }
 
@@ -303,7 +307,6 @@ footer {
     margin-top: 50px;
 }
 
-/* News feed posts style */
 
 .content-container {
     display: flex;
@@ -352,8 +355,8 @@ footer {
 }
 
 .post img.post-image {
-    width: 90%;
-    height: auto;
+    width: 60%;
+    height: 10%;
     border-radius: 10px;
     margin-bottom: 10px;
 }
@@ -778,7 +781,7 @@ footer {
     text-align: center;
 }
 
-/* Post Creation Page Styles */
+
 .post-creation-container {
     max-width: 600px;
     margin: 50px auto;
@@ -832,7 +835,7 @@ footer {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #0022ff;
+    background-color: #28a745;
     color: #fff;
     font-size: 16px;
     cursor: pointer;
@@ -840,7 +843,7 @@ footer {
 }
 
 .btn-publish:hover {
-    background-color: #04088b;
+    background-color: #28a746aa;
 }
 
 
@@ -1003,4 +1006,40 @@ footer {
 .friend-username {
     font-size: 16px;
     color: #333;
+}
+
+.community-name {
+    font-size: 0.9em;
+    color: #555;
+    margin-left: 10px;
+    padding: 2px 4px;
+    background-color: #f3f3f3;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.community-name a{
+    text-decoration: none;
+    color: #555;
+}
+
+.create-post-btn {
+    border: 2px solid #28a745;
+    background-color: #28a745;
+    border-radius: 0.9em;
+    padding: 0.8em 1.2em 0.8em 1em;
+    transition: all ease-in-out 0.2s;
+    font-size: 16px;
+}
+
+.create-post-btn span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-weight: 600;
+}
+
+.create-post-btn:hover {
+    background-color: #28a746aa;
 }

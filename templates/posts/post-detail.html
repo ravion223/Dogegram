@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 {% block content %}
 
 <div class="content-wrap">
@@ -14,11 +15,24 @@
                     {% endif %}
                 </a>
                 <div class="username">{{ post.author.username }}</div>
+                {% if post.community %}
+                    <div class="community-name"><a href="{% url 'communities:community-detail' post.community.id %}">r/{{ post.community.name }}</a></div>
+                {% endif %}
             </div>
             <div class="post-detail">
-                <div class="post-title">{{ post.title }}</div>
+                {% if post.title %}
+                    <div class="post-title">{{ post.title }}</div>
+                {% endif %}
                 {% if post.post_image %}
-                    <img src="{{ post.post_image.url }}" class="post-image-detail">
+                    {% if post.post_image.url|is_image %}
+                        <img src="{{ post.post_image.url }}" class="post-image-detail">
+                    {% elif post.post_image.url|is_video %}
+                        <video class="message-media" controls width="350" height="350">
+                            <source src="{{ post.post_image.url }}" type="video/{{ post.post_image.url|is_video }}">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p>If the video does not play, please check if the video format is supported by your browser and if the video URL is correct: {{ post.post_image.url }}</p>
+                    {% endif %}
                 {% endif %}
                 <div class="description">{{ post.description }}</div>
                 <div class="creation-date">{{ post.creation_date }}</div>
@@ -66,28 +80,46 @@
 </form>
 
 {% if commentaries %}
+
     {% for commentary in commentaries %}
-        <div class="card">
-                <div class="body">
-                    <img src="{{ commentary.author.profile.profile_pic.url }}" width="16" height="16">
-                    <p class="text editableText" id="editableText-{{ commentary.pk }}">{{ commentary.content }}</p><span class="username">from: <a href="{% url 'auth_system:profile-detail' commentary.author.id %}">{{ commentary.author.username }}</a></span>
-                <div class="footer">
-                <div>
+        <div class="comment-card">
+            <div class="comment-author">
+                {% if commentary.author.profiles.first.profile_pic %}
+                    <img class="profile-pic" src="{{ commentary.author.profiles.first.profile_pic.url }}" width="40" height="40">
+                {% else %}
+                    <img class="profile-pic" src="{% static 'img/default-profile-pic.jpg' %}" width="40" height="40">
+                {% endif %}
+            </div>
+            <div class="comment-content">
+                <p class="comment-text" id="editableText-{{ commentary.pk }}">{{ commentary.content }}</p>
+                <div class="comment-meta">
+                    from: <a href="{% url 'auth_system:profile-detail' commentary.author.id %}">{{ commentary.author.username }}</a>
+                </div>
+                <div class="comment-footer">
                     <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                    </svg>{{ commentary.likes|length }}
+                        {% if request.user in commentary.likes.all %}
+                            <a href="{% url 'posts:like-comment' commentary.id post.id %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16" style="color: red;">
+                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                </svg><span style="color: black;">{{ commentary.likes.count }}</span>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'posts:like-comment' commentary.id post.id %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16" style="color: black;">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                                </svg><span style="color: black;">{{ commentary.likes.count }}</span>
+                            </a>
+                        {% endif %}
+                        
                     </div>
                     {% if commentary.author == request.user %}
-                        <div>
-                            <button class="edit-btn edit-button" data-comment-id="{{ commentary.pk }}">
+                        <div class="comment-actions">
+                            <button class="comment-action edit-button" data-comment-id="{{ commentary.pk }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg> Edit
                             </button>
-                        </div>
-                        <div>
-                            <button class="delete-btn delete-button" data-comment-id="{{ commentary.pk }}">
+                            <button class="comment-action delete-button" data-comment-id="{{ commentary.pk }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                     <path d="M5.5 5.5A.5.5 0 0 1 6 5h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5H6a.5.5 0 0 1-.5-.5v-7zm-1 0V13a1.5 1.5 0 0 0 1.5 1.5h4A1.5 1.5 0 0 0 11 13V5.5h-6zM4.118 4.118A1.5.5 0 0 1 5.5 3.5h5a1.5.5 0 0 1 1.382.618l1 1A1.5.5 0 0 1 13 5.5H3a1.5 1.5 0 0 1 .618-1.382l1-1zM8 0a.5.5 0 0 1 .5.5V1h3a.5.5 0 0 1 0 1H3.5a.5.5 0 0 1 0-1h3V.5A.5.5 0 0 1 8 0z"/>
                                 </svg> Delete
@@ -95,15 +127,97 @@
                         </div>
                     {% endif %}
                 </div>
-            
-            </div>
-                </div>
             </div>
         </div>
     {% endfor %}
 {% else %}
     <p class="no-commentaries">No commentaries yet.</p>
 {% endif %}
+
+<style>
+    .comment-card {
+        border: 1px solid #e1e1e1;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: flex-start;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .comment-author {
+        margin-right: 15px;
+    }
+
+    .profile-pic {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+    }
+
+    .comment-content {
+        flex-grow: 1;
+    }
+
+    .comment-text {
+        margin: 0;
+    }
+
+    .comment-meta {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .comment-meta a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .comment-footer {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        font-size: 0.9em;
+    }
+
+    .comment-footer svg {
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    .comment-actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+    }
+
+    .comment-action {
+        margin-left: 15px;
+        cursor: pointer;
+        color: #007bff;
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        font-size: 0.9em;
+    }
+
+    .comment-action:hover {
+        color: #0056b3;
+    }
+
+    .comment-action svg {
+        margin-right: 5px;
+    }
+
+    .no-commentaries {
+        color: #888;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
 
 <script>
     $(document).ready(function() {

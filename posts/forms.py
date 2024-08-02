@@ -12,6 +12,14 @@ class PostCreateForm(forms.models.ModelForm):
             'description': 'Add a content to your post (*required)'
         }
 
+        def clean_media(self):
+            post_image = self.cleaned_data.get('post_image')
+            if post_image:
+                mime = post_image.guess_type(post_image.name)[0]
+                if mime not in ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm']:
+                    raise forms.ValidationError('Unsupported file type.')
+            return post_image
+
 
 class PostUpdateForm(forms.models.ModelForm):
     class Meta:
@@ -23,8 +31,25 @@ class PostUpdateForm(forms.models.ModelForm):
             'description': 'Add a content to your post'
         }
 
+        def clean_media(self):
+            post_image = self.cleaned_data.get('post_image')
+            if post_image:
+                mime = post_image.guess_type(post_image.name)[0]
+                if mime not in ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm']:
+                    raise forms.ValidationError('Unsupported file type.')
+            return post_image
+
 
 class CommentaryCreateForm(forms.models.ModelForm):
     class Meta:
         model = models.Commentary
         fields = ('content',)
+
+
+class PostsFilterForm(forms.models.ModelForm):
+    POSTS_CHOICES = [
+        ('', 'All'),
+        ('friends', 'Friends')
+    ]
+    
+    posts = forms.ChoiceField(choices=POSTS_CHOICES, label='status', required=False)

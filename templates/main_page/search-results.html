@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block content %}
+<div class="search-results">
+    <h2>Search Results for "{{ query }}"</h2>
+    
+    <div class="search-section">
+        <h3>Users</h3>
+        <ul class="search-list">
+            {% for user in users %}
+                <li class="search-item">
+                    {% if user.profiles.first.profile_pic %}
+                        <img src="{{ user.profiles.first.profile_pic.url }}" class="profile-pic" alt="{{ user.username }}">
+                    {% else %}
+                        <img src="{% static 'img/default-profile-pic.jpg' %}" class="profile-pic" alt="{{ user.username }}">
+                    {% endif %}
+                    <a href="{% url 'auth_system:profile-detail' user.profiles.first.id %}" class="profile-link">{{ user.username }}</a>
+                </li>
+            {% empty %}
+                <li class="no-results">No users found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="search-section">
+        <h3>Posts</h3>
+        <ul class="search-list posts-grid">
+            {% for post in posts %}
+                <li class="card">
+                    {% if post.title %}
+                        <div class="post-title">{{ post.title }}</div>
+                    {% endif %}
+                    {% if post.post_image %}
+                        {% if post.post_image.url|is_image %}
+                            <img src="{{ post.post_image.url }}" class="post-image" alt="Post image">
+                        {% elif post.post_image.url|is_video %}
+                            <video class="post-video" controls>
+                                <source src="{{ post.post_image.url }}" type="video/{{ post.post_image.url|is_video }}">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% endif %}
+                    {% endif %}
+                    <div class="container">
+                        <a href="{% url 'posts:detail-post' post.id %}" class="post-link">
+                            {{ post.description|truncatewords:10 }}
+                        </a>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="no-results">No posts found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<style>
+.search-results {
+    padding: 20px;
+}
+
+.search-results h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.search-section {
+    margin-bottom: 30px;
+}
+
+.search-section h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.search-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.search-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.profile-pic, .post-image, .post-video {
+    margin-right: 15px;
+    border-radius: 5px;
+}
+
+.profile-pic {
+    width: 50px;
+    height: 50px;
+}
+
+.post-image {
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.post-video {
+    width: 200px;
+    height: 200px;
+}
+
+.profile-link, .post-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.profile-link:hover, .post-link:hover {
+    text-decoration: underline;
+}
+
+.no-results {
+    color: #999;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+</style>
+{% endblock %}

@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.forms import BaseModelForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
@@ -6,6 +7,7 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from auth_system import models as auth_models
 from . import models
 from . import forms
+from communities.models import Community
 
 # Create your views here.
 
@@ -20,11 +22,28 @@ class PostCreateView(CreateView):
     model = models.Post
     form_class = forms.PostCreateForm
     template_name = 'posts/post-create.html'
-    success_url = reverse_lazy('main_page:main-page')
 
-    def form_valid(self, form) -> HttpResponse:
+    def get_success_url(self) -> str:
+        community_id = self.kwargs.get('community_id')
+        if community_id:
+            return reverse_lazy('communities:community-detail', kwargs={'pk': community_id})
+        else:
+            return reverse_lazy('main_page:main-page')
+
+    def form_valid(self, form, **kwargs) -> HttpResponse:
         form.instance.author = self.request.user
+        community_id = self.kwargs.get('community_id')
+        if community_id:
+            community = get_object_or_404(Community, id=community_id)
+            form.instance.community = community
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        community_id = self.kwargs.get('community_id')
+        if community_id:
+            context['community'] = get_object_or_404(Community, id=community_id)
+        return context
     
 
 class PostUpdateView(UpdateView):
@@ -40,7 +59,7 @@ def delete_post(request, post_id):
     if request.method == 'POST':
         post = get_object_or_404(models.Post, id=post_id)
         post.delete()
-        return JsonResponse({'message': 'Post deleted successfully'})
+        return JsonResponse({'message': 'Post deleted successfully'}) and  redirect('main_page:main-page')
     else:
         return JsonResponse({'error': 'Invalid request method'})
 
@@ -109,15 +128,18 @@ def like_post(request, pk):
     return HttpResponseRedirect(reverse('posts:detail-post', args=[str(pk)]))
 
 
-def like_post_main(request, pk):
-    post = get_object_or_404(models.Post, id=request.POST.get('post_id'))
+def like_comment(request, pk, post_id):
+    comment = get_object_or_404(models.Commentary, pk=pk)
     liked = False
-    if post.likes.filter(id=request.user.id).exists():
-        post.likes.remove(request.user)
+    if comment.likes.filter(id=request.user.id).exists():
+        comment.likes.remove(request.user)
         liked = False
     else:
-        post.likes.add(request.user)
+        comment.likes.add(request.user)
         liked = True
+        auth_models.Notification.objects.create(user=comment.author, message=f"{request.user.username} liked your comment!")
+
+    return HttpResponseRedirect(reverse('posts:detail-post', args=[str(post_id)]))
 
 
 def update_text(request, comment_id):

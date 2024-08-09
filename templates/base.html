@@ -47,7 +47,6 @@
                         <div class="dropdown-content">
                             <a href="{% url 'auth_system:profile-detail' request.user.profiles.first.id %}">My profile</a>
                             <a href="{% url 'auth_system:my-profile-update' %}">Edit profile</a>
-                            <a href="{% url 'auth_system:notifications' %}">Notifications</a>
                             <a href="{% url 'auth_system:log-out' %}">Log-out</a>
                         </div>
                     </div>

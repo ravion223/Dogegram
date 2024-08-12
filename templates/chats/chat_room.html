@@ -255,5 +255,21 @@
       document.getElementById('file-name').textContent = fileName;
     }
 
+    function checkForNewMessages(){
+      $.ajax({
+        url: "{% url 'chats:check-new-messages' room_name %}",
+        method: 'GET',
+        success: function(response) {
+          if (response.new_messages) {
+            location.reload();
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error checking new messages:', error)
+        }
+      })
+    }
+    setInterval(checkForNewMessages, 5000);
+
 </script>
 {% endblock %}

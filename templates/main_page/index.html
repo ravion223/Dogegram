@@ -7,9 +7,9 @@
     <section class="news-feed">
         <h2>News Feed</h2>
         {% if posts %}
-            <div>
-                <a href="?filter=all">All Posts</a> | 
-                <a href="?filter=friends">Friends' Posts</a>
+            <div >
+                <a href="?filter=all" style="color: #007bff;">All Posts</a> | 
+                <a href="?filter=friends" style="color: #007bff;">Friends' Posts</a>
             </div>
             <div class="post">
                 {% for post in posts %}

@@ -44,6 +44,12 @@ class CommentaryCreateForm(forms.models.ModelForm):
     class Meta:
         model = models.Commentary
         fields = ('content',)
+        labels = {'content': ''}
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'placeholder': 'Add a comment...'
+            })
+        }
 
 
 class PostsFilterForm(forms.models.ModelForm):

@@ -10,6 +10,8 @@ from django.views.generic import DetailView, View, UpdateView, ListView
 from . import models
 from .utils import get_friend_request_or_false
 from django.contrib.auth.views import LoginView
+from posts import models as posts_models
+from django.db.models import Q
 
 # Create your views here.
 
@@ -64,6 +66,13 @@ def profile_view(request, **kwargs):
     profile = user.profiles.first()
     is_friend = False
 
+    filter_option = request.GET.get('filter', 'media')
+
+    if filter_option == 'media':
+        posts = posts_models.Post.objects.filter(~Q(post_image=''), author=user)
+    else:
+        posts = posts_models.Post.objects.filter(Q(post_image=''), author=user)
+
     if request.user.is_authenticated:
         is_friend = models.Friendship.objects.filter(
             user1=request.user, user2=user
@@ -81,7 +90,8 @@ def profile_view(request, **kwargs):
         'profile_user': user,
         'profile': profile,
         'is_friend': is_friend,
-        'posts': user.posts.all(),
+        'posts': posts,
+        'filter_option': filter_option,
         'friends': friends
     }
     return render(request, 'auth_system/profile-detail.html', context)

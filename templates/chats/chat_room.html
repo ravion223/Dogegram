@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
+{% load crispy_forms_tags %}
 {% block content %}
 <div class="chat-window">
   <div id="chat-log">
@@ -47,8 +48,15 @@
   </div>
   <form id="chat-form" method="post" action="{% url 'chats:chat-room' room_name %}" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Send</button>
+    <div class="form-group">
+      <div class="custom-file-upload">
+        <label for="file-input" class="custom-file-label">Upload Media</label>
+        <input id="file-input" type="file" name="media" style="display: none;" onchange="updateFileName(this)">
+        <span id="file-name">No file chosen</span>
+      </div>
+      <textarea name="content" id="message-content" rows="2" class="form-control" placeholder="Type your message..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
   </form>
 </div>
 
@@ -103,6 +111,9 @@
 }
 
 #chat-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   margin-top: 20px; 
   padding: 10px; 
   border-top: 1px solid #ddd; 
@@ -110,15 +121,21 @@
   border-radius: 0 0 10px 10px; 
 }
 
-#chat-form input[type="text"] {
-  flex: 1;
+#message-content {
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-right: 10px;
+  margin-bottom: 10px;
+  resize: none;
+}
+
+.form-group {
+  width: 98%;
 }
 
 #chat-form button {
+  align-self: flex-end;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -130,7 +147,6 @@
 #chat-form button:hover {
   background-color: #2E8E00;
 }
-
 
 .editableText[contenteditable="true"] {
     border: 1px solid #ddd;
@@ -154,6 +170,30 @@
 .edit-button:hover,
 .delete-button:hover {
     background-color: #f0f0f0;
+}
+
+.custom-file-upload {
+    display: flex;
+    align-items: center;
+}
+
+.custom-file-label {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-label:hover {
+    background-color: #0056b3;
+}
+
+#file-name {
+    font-size: 14px;
+    color: #666;
 }
 
 </style>
@@ -210,5 +250,26 @@
             }
         });
     });
+    function updateFileName(input) {
+      const fileName = input.files.length > 0 ? input.files[0].name : 'No file chosen';
+      document.getElementById('file-name').textContent = fileName;
+    }
+
+    function checkForNewMessages(){
+      $.ajax({
+        url: "{% url 'chats:check-new-messages' room_name %}",
+        method: 'GET',
+        success: function(response) {
+          if (response.new_messages) {
+            location.reload();
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error checking new messages:', error)
+        }
+      })
+    }
+    setInterval(checkForNewMessages, 5000);
+
 </script>
 {% endblock %}

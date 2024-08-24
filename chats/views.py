@@ -19,20 +19,7 @@ def chat_room(request, room_name):
 
     if request.user not in room.participants.all():
         return redirect('main_page:main-page')
-
-    # if request.method == 'POST':
-    #     # content = request.POST.get('message')
-    #     form = forms.MessageForm(request.POST, request.FILES)
-    #     if content:
-    #         models.Message.objects.create(room=room, sender=request.user, content=content)
-
-    #         participants = room.participants.all()
-    #         friend_user = next(user for user in participants if user != request.user)
-
-    #         auth_models.Notification.objects.create(user=friend_user, message=f"{request.user.username} has sent you a message!")
-
-    #         return redirect('chats:chat-room', room_name=room_name)
-
+    
     if request.method == 'POST':
         form = forms.MessageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -89,3 +76,12 @@ def start_chat(request, friend_id):
             room.participants.set([request.user, friend])
     
     return redirect('chats:chat-room', room_name=room_name)
+
+
+def check_new_messages(request, room_name):
+    room = models.ChatRoom.objects.get(name=room_name)
+    latest_message = models.Message.objects.filter(room=room).order_by('-timestamp').first()
+
+    new_messages = latest_message and latest_message.sender != request.user
+
+    return JsonResponse({'new_messages': new_messages})

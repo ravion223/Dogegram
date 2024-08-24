@@ -32,3 +32,6 @@ class Message(models.Model):
     content = models.TextField()
     media = models.FileField(blank=True, validators=[validate_media_type], null=True, upload_to='chats/')
     timestamp = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-timestamp']

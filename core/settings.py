@@ -46,7 +46,10 @@ INSTALLED_APPS = [
     'channels',
 
     'chats',
-    'communities'
+    'communities',
+    
+    'crispy_forms',
+    'crispy_bootstrap4'
 ]
 
 MIDDLEWARE = [
@@ -164,3 +167,5 @@ LOGIN_URL = '/sign-in/'
 AUTH_USER_MODEL = 'auth_system.CustomUser'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -6,11 +6,13 @@
 <div class="content-container">
     <section class="news-feed">
         <h2>News Feed</h2>
+        <div class="filter-switch">
+            <a href="?filter=all" class="switch-option {% if request.GET.filter == 'all' or not request.GET.filter %}active{% endif %}">All Posts</a>
+            <a href="?filter=friends" class="switch-option {% if request.GET.filter == 'friends' %}active{% endif %}">Friends' Posts</a>
+        </div>
         {% if posts %}
-            <div>
-                <a href="?filter=all">All Posts</a> | 
-                <a href="?filter=friends">Friends' Posts</a>
-            </div>
+            
+        
             <div class="post">
                 {% for post in posts %}
                     <div class="post-header">
@@ -191,6 +193,33 @@ a {
 .community-item a:hover {
     text-decoration: underline;
 }
+
+.filter-switch {
+        display: inline-flex;
+        border: 2px solid #007bff;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .switch-option {
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #007bff;
+        background-color: #fff;
+        transition: background-color 0.3s, color 0.3s;
+        text-align: center;
+        width: 100%;
+    }
+
+    .switch-option.active {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+
+    .filter-switch a:not(:last-child) {
+        border-right: 2px solid #007bff;
+    }
 
 
 </style>

@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    padding-top: 80px;
     background-color: #f4f4f4;
 }
 
@@ -11,6 +11,10 @@ header {
     justify-content: space-around;
     align-items: center;
     border-bottom: 2px solid #b4b4b4;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #fff; /* Ensure the background color covers the content behind */
 }
 
 a {
@@ -22,7 +26,7 @@ a {
     flex: 1;
     align-items: center;
     justify-content: space-around;
-    gap: 300px;
+    gap: 400px;
 }
 
 .image-text {
@@ -155,8 +159,8 @@ footer {
   }
   
   .search__icon {
-    height: 1.3em;
-    width: 1.2em;
+    height: 1em;
+    width: 1em;
     fill: #b4b4b4;
   }
 
@@ -647,6 +651,10 @@ footer {
 }
 
 .commentary-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
     margin-top: 20px;
 }
 
@@ -707,45 +715,7 @@ footer {
     font-style: italic;
 }
 
-.commentary-form {
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
 
-.commentary-form p {
-    margin-bottom: 10px;
-}
-
-.commentary-form input[type="text"],
-.commentary-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    margin-bottom: 10px;
-}
-
-.commentary-form button.btn-submit {
-    display: inline-block;
-    padding: 10px 15px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.commentary-form button.btn-submit:hover {
-    background-color: #0056b3;
-}
-
-.commentary-form {
-    margin-bottom: 20px;
-}
 
 .btn-submit {
     background-color: #ff0000;
@@ -1042,4 +1012,55 @@ footer {
 
 .create-post-btn:hover {
     background-color: #28a746aa;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+    max-width: 500px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="file"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
 }

@@ -3,7 +3,7 @@
 {% block content %}
 <div class='post-creation-container'>
     <h2>Update community info</h2>
-    <form action="{% url 'communities:community-update' community.pk %}" method="post" class="post-form">
+    <form action="{% url 'communities:community-update' community.pk %}" method="post" class="post-form" enctype="multipart/form-data">
         <div class="form-group">
             {% csrf_token %}
             {{ form.as_p }}
